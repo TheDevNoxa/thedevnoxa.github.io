@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IP Tracker</title>
+    <title>Discord Pseudo</title>
     <style>
         * {
             margin: 0;
@@ -12,35 +12,32 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: #ffffff;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
-            transition: background 0.5s;
+            transition: all 0.5s ease;
+            color: #000;
         }
         
         body.hacker {
-            background: #0a0e27;
-            color: #00ff00;
+            background: #0a0a0a;
+            color: #ff0000;
         }
         
         .container {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            max-width: 500px;
+            max-width: 450px;
             width: 100%;
-            padding: 40px;
-            transition: all 0.5s;
+            transition: all 0.5s ease;
         }
         
         body.hacker .container {
-            background: #0f1419;
-            border: 2px solid #00ff00;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+            border: 1px solid #ff0000;
+            border-radius: 4px;
+            padding: 40px;
         }
         
         .section {
@@ -49,137 +46,176 @@
         
         .section.active {
             display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         
         h1 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 28px;
-            transition: color 0.5s;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
         }
         
         body.hacker h1 {
-            color: #00ff00;
-            text-shadow: 0 0 10px #00ff00;
+            color: #ff0000;
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
             font-family: 'Courier New', monospace;
         }
         
         .subtitle {
+            font-size: 16px;
             color: #666;
-            font-size: 14px;
-            margin-bottom: 25px;
-            transition: color 0.5s;
+            margin-bottom: 32px;
+            line-height: 1.5;
         }
         
         body.hacker .subtitle {
-            color: #00aa00;
+            color: #999;
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
         }
         
         label {
             display: block;
+            font-size: 14px;
+            font-weight: 500;
             margin-bottom: 8px;
             color: #333;
-            font-weight: 600;
-            font-size: 14px;
-            transition: color 0.5s;
         }
         
         body.hacker label {
-            color: #00ff00;
+            color: #ff0000;
             font-family: 'Courier New', monospace;
         }
         
         input {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: all 0.3s;
-            background: white;
-            color: #333;
-        }
-        
-        body.hacker input {
-            background: #0a0e27;
-            border: 2px solid #00ff00;
-            color: #00ff00;
-            font-family: 'Courier New', monospace;
+            padding: 12px 16px;
+            font-size: 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            transition: all 0.2s;
+            background: #fff;
+            color: #000;
+            font-family: inherit;
         }
         
         input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #000;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        body.hacker input {
+            background: #1a1a1a;
+            border: 1px solid #ff0000;
+            color: #ff0000;
+            font-family: 'Courier New', monospace;
         }
         
         body.hacker input:focus {
-            border-color: #00ff00;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.2);
         }
         
         button {
             width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            padding: 12px 24px;
+            background: #000;
+            color: #fff;
             border: none;
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 4px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
+            font-family: inherit;
         }
         
         button:hover {
-            transform: translateY(-2px);
+            background: #222;
+            transform: translateY(-1px);
         }
         
         button.secondary {
-            background: #999;
-            margin-top: 10px;
+            background: #f0f0f0;
+            color: #000;
+            margin-top: 12px;
+        }
+        
+        button.secondary:hover {
+            background: #e0e0e0;
         }
         
         button.logout {
-            background: #dc3545;
+            background: #ff0000;
+            color: #fff;
+        }
+        
+        button.logout:hover {
+            background: #cc0000;
         }
         
         body.hacker button {
-            background: #00ff00;
-            color: #0a0e27;
-            border: 2px solid #00ff00;
-            font-family: 'Courier New', monospace;
+            background: #ff0000;
+            color: #000;
+            border: 1px solid #ff0000;
             font-weight: bold;
         }
         
         body.hacker button:hover {
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.6);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+            background: #ff1a1a;
+        }
+        
+        body.hacker button.secondary {
+            background: transparent;
+            border: 1px solid #ff0000;
+            color: #ff0000;
         }
         
         .message {
-            padding: 12px;
-            border-radius: 5px;
-            margin-bottom: 15px;
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-bottom: 16px;
             font-size: 14px;
             display: none;
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from { 
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .error {
-            background: #ffebee;
+            background: #ffe0e0;
             color: #d32f2f;
-            border: 1px solid #ef5350;
+            border: 1px solid #ffb3b3;
         }
         
         .success {
-            background: #e8f5e9;
+            background: #e0ffe0;
             color: #388e3c;
-            border: 1px solid #66bb6a;
+            border: 1px solid #b3ffb3;
         }
         
         body.hacker .success {
-            background: #0a0e27;
-            color: #00ff00;
-            border: 2px solid #00ff00;
-            font-family: 'Courier New', monospace;
+            background: #1a1a1a;
+            color: #ff0000;
+            border: 1px solid #ff0000;
         }
         
         .message.show {
@@ -189,32 +225,32 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 24px;
+            font-size: 14px;
         }
         
         th, td {
             padding: 12px;
             text-align: left;
-            border-bottom: 1px solid #eee;
-            font-size: 13px;
-            color: #333;
-            transition: all 0.5s;
+            border-bottom: 1px solid #e0e0e0;
         }
         
         body.hacker th,
         body.hacker td {
-            color: #00ff00;
-            border-bottom: 1px solid #00ff00;
-            font-family: 'Courier New', monospace;
+            border-bottom: 1px solid #ff0000;
+            color: #ff0000;
         }
         
         th {
             background: #f5f5f5;
             font-weight: 600;
+            color: #333;
         }
         
         body.hacker th {
-            background: #0a0e27;
+            background: #0a0a0a;
+            color: #ff0000;
+            font-family: 'Courier New', monospace;
         }
         
         tr:hover {
@@ -222,142 +258,178 @@
         }
         
         body.hacker tr:hover {
-            background: #1a1f3a;
-            box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.1);
+            background: #1a1a1a;
         }
         
         .stats {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 25px;
+            gap: 16px;
+            margin-bottom: 32px;
         }
         
         .stat-box {
-            background: #f5f5f5;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            transition: all 0.5s;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            transition: all 0.2s;
         }
         
         body.hacker .stat-box {
-            background: #0a0e27;
-            border: 2px solid #00ff00;
+            border: 1px solid #ff0000;
+            background: #0a0a0a;
         }
         
         .stat-label {
             font-size: 12px;
             color: #666;
-            margin-bottom: 5px;
-            transition: color 0.5s;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         body.hacker .stat-label {
-            color: #00aa00;
+            color: #999;
         }
         
         .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #667eea;
-            transition: color 0.5s;
+            font-size: 28px;
+            font-weight: 700;
+            color: #000;
         }
         
         body.hacker .stat-value {
-            color: #00ff00;
+            color: #ff0000;
             font-family: 'Courier New', monospace;
-            text-shadow: 0 0 10px #00ff00;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
         }
         
         .notice {
-            background: #fff3cd;
-            border-left: 4px solid #ff9800;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 25px;
-            font-size: 13px;
+            background: #f5f5f5;
+            padding: 16px;
+            border-radius: 4px;
+            margin-bottom: 24px;
+            font-size: 14px;
             line-height: 1.6;
-            transition: all 0.5s;
+            border-left: 4px solid #000;
         }
         
         body.hacker .notice {
-            background: #0a0e27;
-            border-left: 4px solid #00ff00;
-            color: #00ff00;
+            background: #1a1a1a;
+            border-left: 4px solid #ff0000;
+            color: #ff0000;
         }
         
         .notice strong {
-            color: #d32f2f;
-            transition: color 0.5s;
+            color: #000;
         }
         
         body.hacker .notice strong {
-            color: #00ff00;
+            color: #ff0000;
         }
         
         .ip-notification {
-            background: #00ff00;
-            color: #0a0e27;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            background: #1a1a1a;
+            border: 2px solid #ff0000;
+            color: #ff0000;
+            padding: 24px;
+            border-radius: 4px;
+            margin-bottom: 24px;
             font-family: 'Courier New', monospace;
-            font-weight: bold;
-            animation: pulse 0.5s;
+            font-weight: 500;
+            animation: pulse 0.5s ease;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.2);
         }
         
         @keyframes pulse {
-            0% { opacity: 0; transform: scale(0.95); }
-            100% { opacity: 1; transform: scale(1); }
+            0% { 
+                opacity: 0;
+                transform: scale(0.98);
+                box-shadow: 0 0 0 rgba(255, 0, 0, 0);
+            }
+            100% { 
+                opacity: 1;
+                transform: scale(1);
+                box-shadow: 0 0 30px rgba(255, 0, 0, 0.2);
+            }
         }
         
         .notification-line {
-            margin: 5px 0;
-            font-size: 14px;
+            margin: 8px 0;
+            font-size: 13px;
+            letter-spacing: 0.5px;
         }
         
         .notification-line.highlight {
-            color: #ff0000;
+            color: #ff3333;
             font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+        
+        .notification-line.success {
+            color: #00ff00;
+        }
+        
+        h2 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 24px;
+            margin-bottom: 16px;
+        }
+        
+        body.hacker h2 {
+            color: #ff0000;
+            font-family: 'Courier New', monospace;
+        }
+        
+        p {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        body.hacker p {
+            color: #999;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- SECTION 1: Discord -->
+        <!-- SECTION 1: Discord - Design Vercel -->
         <div id="discordSection" class="section active">
-            <h1>📊 Enregistrement de Visite</h1>
-            <p class="subtitle">Veuillez entrer votre nom Discord</p>
+            <h1>IP Tracker</h1>
+            <p class="subtitle">Enregistrez votre visite de manière sécurisée</p>
             
             <div id="discordError" class="message error"></div>
             <div id="discordSuccess" class="message success"></div>
             
             <div class="form-group">
-                <label>👤 Votre nom Discord:</label>
-                <input type="text" id="discordInput" placeholder="Ex: MonPseudo#1234" maxlength="32">
+                <label>👤 Votre nom Discord</label>
+                <input type="text" id="discordInput" placeholder="MonPseudo#1234" maxlength="32">
             </div>
             
-            <p style="font-size: 12px; color: #666; margin-top: 10px; text-align: center;">
-                (Utilisé pour les DMs au cas où)
+            <p style="font-size: 13px; color: #999; margin-bottom: 24px;">
+                Utilisé uniquement pour les DMs au cas où
             </p>
             
-            <button onclick="submitDiscord()">✓ Enregistrer ma visite</button>
+            <button onclick="submitDiscord()">Enregistrer ma visite</button>
         </div>
         
-        <!-- SECTION 2: Hacker Mode -->
+        <!-- SECTION 2: Hacker Mode avec notification IP -->
         <div id="hackerSection" class="section">
-            <h1>⚠️ SYSTÈME DÉTECTÉ</h1>
+            <h1>SYSTÈME DÉTECTÉ</h1>
             
             <div class="ip-notification">
-                <div class="notification-line">> IP RÉCUPÉRÉE AVEC SUCCÈS</div>
-                <div class="notification-line">> ADRESSE: <span id="ipNotif" class="highlight">XXX.XXX.XXX.XXX</span></div>
-                <div class="notification-line">> UTILISATEUR: <span id="userNotif" class="highlight">---</span></div>
-                <div class="notification-line">> STOCKÉE DANS LA BASE DE DONNÉES</div>
+                <div class="notification-line success">> SYSTÈME INITIALISÉ</div>
+                <div class="notification-line">> SCAN IP EN COURS...</div>
+                <div class="notification-line success">> IP RÉCUPÉRÉE AVEC SUCCÈS</div>
+                <div class="notification-line">> ADRESSE: <span class="highlight" id="ipNotif">XXX.XXX.XXX.XXX</span></div>
+                <div class="notification-line">> UTILISATEUR: <span class="highlight" id="userNotif">---</span></div>
+                <div class="notification-line success">> STOCKÉE DANS LA BASE DE DONNÉES</div>
+                <div class="notification-line">> CONNEXION ÉTABLIE</div>
             </div>
             
             <div class="notice">
-                <strong>📋 AVIS DE CONFIDENTIALITÉ:</strong><br>
+                <strong>⚠️ AVIS DE CONFIDENTIALITÉ</strong><br><br>
                 L'adresse IP récupérée est stockée à titre informatif uniquement.<br>
                 <strong>Elle ne sera PAS utilisée à des fins commerciales ou de suivi.</strong>
             </div>
@@ -367,28 +439,28 @@
         
         <!-- SECTION 3: Login Admin -->
         <div id="loginSection" class="section">
-            <h1>🔒 Espace Admin</h1>
-            <p class="subtitle">Connectez-vous pour voir les visites</p>
+            <h1>Admin Panel</h1>
+            <p class="subtitle">Accédez à votre tableau de bord sécurisé</p>
             
             <div id="loginError" class="message error"></div>
             
             <div class="form-group">
-                <label>👤 Identifiant:</label>
+                <label>👤 Identifiant</label>
                 <input type="text" id="usernameInput" placeholder="root">
             </div>
             
             <div class="form-group">
-                <label>🔑 Mot de passe:</label>
+                <label>🔑 Mot de passe</label>
                 <input type="password" id="passwordInput" placeholder="••••••••">
             </div>
             
             <button onclick="loginAdminFunc()">Se connecter</button>
-            <button class="secondary" onclick="goToDiscord()">← Retour</button>
+            <button class="secondary" onclick="goToDiscord()">Retour</button>
         </div>
         
-        <!-- SECTION 4: Admin Panel -->
+        <!-- SECTION 4: Admin Panel - Hacker Mode -->
         <div id="adminSection" class="section">
-            <h1>📈 DASHBOARD</h1>
+            <h1>DASHBOARD</h1>
             <p class="subtitle">> Visites enregistrées et stockées</p>
             
             <button class="logout" onclick="logout()">🚪 Déconnexion</button>
@@ -400,11 +472,11 @@
                 </div>
                 <div class="stat-box">
                     <div class="stat-label">VOTRE IP</div>
-                    <div class="stat-value" id="adminIP" style="font-size: 14px;">-</div>
+                    <div class="stat-value" id="adminIP" style="font-size: 16px; word-break: break-all;">-</div>
                 </div>
             </div>
             
-            <h2 style="font-size: 16px; margin-top: 20px; margin-bottom: 15px;">👥 BASE DE DONNÉES:</h2>
+            <h2>BASE DE DONNÉES</h2>
             
             <div style="overflow-x: auto;">
                 <table>
@@ -434,7 +506,6 @@
         const ADMIN_USERS = ['root', 'LQSQXiDX'];
         const ADMIN_PASS = 'LQSQXiDX';
 
-        // Charger les visites depuis le stockage au démarrage
         function loadVisitsFromStorage() {
             const stored = localStorage.getItem('tracker_visits');
             if (stored) {
@@ -446,7 +517,6 @@
             }
         }
 
-        // Sauvegarder les visites dans le stockage
         function saveVisitsToStorage() {
             localStorage.setItem('tracker_visits', JSON.stringify(visits));
         }
@@ -532,13 +602,13 @@
             tbody.innerHTML = '';
 
             if (visits.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Aucune visite</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Aucune visite</td></tr>';
                 return;
             }
 
             visits.forEach((visit, index) => {
                 const row = tbody.insertRow();
-                row.innerHTML = '<td>' + (index + 1) + '</td><td>' + visit.discord + '</td><td><strong>' + visit.ip + '</strong></td><td>' + visit.date + '</td><td><button onclick="deleteVisit(' + index + ')" style="background: #dc3545; padding: 5px 10px; font-size: 12px;">Supprimer</button></td>';
+                row.innerHTML = '<td>' + (index + 1) + '</td><td>' + visit.discord + '</td><td>' + visit.ip + '</td><td>' + visit.date + '</td><td><button onclick="deleteVisit(' + index + ')" style="background: #ff0000; padding: 4px 8px; font-size: 12px; border-radius: 2px;">Supprimer</button></td>';
             });
         }
 
