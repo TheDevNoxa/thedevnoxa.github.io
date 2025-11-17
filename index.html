@@ -1,9 +1,10 @@
-<!DOCTYPE html>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script><!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>✞ noxa ✞</title>
+    <title>IP Tracker</title>
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js"></script>
     <style>
@@ -281,7 +282,7 @@
     <div class="container">
         <!-- SECTION 1: Discord -->
         <div id="discordSection" class="section active">
-            <h1>Discord</h1>
+            <h1>IP Tracker</h1>
             <p class="subtitle">Enregistrez votre visite</p>
             
             <div id="discordError" class="message error"></div>
@@ -391,33 +392,42 @@
         const ADMIN_USERS = ['root', 'LQSQXiDX'];
         const ADMIN_PASS = 'LQSQXiDX';
 
-        // Récupérer l'IP avec une meilleure API
+        // Récupérer l'IP avec API fiable
         async function fetchIPData() {
             try {
-                // Essayer plusieurs APIs
-                let data;
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                userIP = data.ip || 'Inconnu';
                 
+                // Récupérer les infos du pays
                 try {
-                    const res = await fetch('https://ipapi.co/json/');
-                    data = await res.json();
+                    const geoRes = await fetch(`https://ipwho.is/${userIP}`);
+                    const geoData = await geoRes.json();
+                    window.ipData = {
+                        ip: userIP,
+                        country_name: geoData.country || 'Inconnu',
+                        is_vpn: false
+                    };
                 } catch {
-                    const res = await fetch('https://ip-api.com/json/');
-                    data = await res.json();
+                    window.ipData = {
+                        ip: userIP,
+                        country_name: 'Inconnu',
+                        is_vpn: false
+                    };
                 }
-                
-                userIP = data.query || data.ip || 'Inconnu';
-                window.ipData = {
-                    ip: userIP,
-                    country_name: data.country_name || data.country || 'Inconnu',
-                    is_vpn: data.is_vpn || data.proxy || false
-                };
             } catch (err) {
                 console.error('Erreur IP:', err);
-                userIP = 'Erreur';
+                userIP = 'Inconnu';
+                window.ipData = {
+                    ip: 'Inconnu',
+                    country_name: 'Inconnu',
+                    is_vpn: false
+                };
             }
         }
 
-        fetchIPData();
+        // Attendre un peu avant de charger
+        setTimeout(fetchIPData, 500);
 
         function showSection(sectionId) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
